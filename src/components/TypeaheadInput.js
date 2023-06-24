@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import SuggestionsList from "./SuggestionsList";
+import { debounce } from "../utils/debounce";
 
 // This endpoint is from TheMovieDB https://developers.themoviedb.org/3/search/search-movies
 // There is a missing query string `query` to make the search
@@ -25,16 +26,20 @@ export default function TypeaheadInput() {
   const [term, setTerm] = useState("")
   const [movies, setMovies] = useState([])
 
-  useEffect(() => {
-    async function updateMovies() {
+  const debouncedUpdateMovies = debounce(async () => {
+    try {
       const results = await fetchMovies(term)
       results.length > 0 && setMovies([...results])
+    } catch (error) {
+      console.error('Failed to fetch movies:', error);
     }
+  }, 250);
 
-    updateMovies()
-  }, [term])
+  useEffect(() => {
+    debouncedUpdateMovies()
+  }, [term, debouncedUpdateMovies])
 
-  function handleOnTyping(e) {
+  const handleTyping = e => {
     setTerm(e.target.value)
   }
 
@@ -44,7 +49,7 @@ export default function TypeaheadInput() {
         className="text-lg text-primary border-primary border rounded-md w-48 focus:w-96 transition-all focus:outline-none p-1 mb-2"
         placeholder="Search"
         type="text"
-        onChange={handleOnTyping}
+        onChange={handleTyping}
       />
       {term && <SuggestionsList suggestions={ movies } />}
     </div>
