@@ -25,6 +25,7 @@ async function fetchMovies(txt) {
 export default function TypeaheadInput() {
   const [term, setTerm] = useState("")
   const [movies, setMovies] = useState([])
+  const [visible, setVisible] = useState(false)
 
   const debouncedUpdateMovies = debounce(async () => {
     try {
@@ -50,8 +51,10 @@ export default function TypeaheadInput() {
         placeholder="Search"
         type="text"
         onChange={handleTyping}
+        onFocus={() => setVisible(true)}
+        onBlur={() => setVisible(false)}
       />
-      {term && <SuggestionsList suggestions={ movies } />}
+      { term && visible && <SuggestionsList suggestions={ movies } />}
     </div>
   );
 }
