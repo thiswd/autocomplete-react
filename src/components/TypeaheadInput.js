@@ -13,6 +13,9 @@ function buildUrl(txt) {
 async function fetchMovies(txt) {
   const url = buildUrl(txt)
   const response = await fetch(url)
+  if (!response.ok) {
+    throw new Error(`Failed to fetch movies. Status: ${response.status}, URL: ${url}`);
+  }
   const data = await response.json()
   const { results } = data
   return results
