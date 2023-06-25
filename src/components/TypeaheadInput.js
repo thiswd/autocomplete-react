@@ -19,6 +19,21 @@ export function TypeaheadInput() {
     setTimeout(() => setVisible(false), DELAY)
   }
 
+  const handleBlur = () => {
+    waitToHide()
+    shrinkInput()
+  }
+
+  const shrinkInput = () => {
+    const [smWidth, lgWidth]  = ["w-52", "w-96"]
+
+    if (searchTerm) {
+      return searchInputRef.current.classList.replace(smWidth, lgWidth)
+    }
+
+    searchInputRef.current.classList.replace(lgWidth, smWidth)
+  }
+
   const debouncedHandleTyping = debounce(event => {
     setSearchTerm(event.target.value);
   }, DELAY);
@@ -38,18 +53,20 @@ export function TypeaheadInput() {
     <div className="flex flex-col justify-center items-center">
       <input
         ref={searchInputRef}
-        className="text-lg text-primary border-primary border rounded-md w-48 focus:w-96 transition-all focus:outline-none p-1 mb-2"
+        className="bg-light text-xl text-primary border-primary border-b-4 w-52 focus:w-96 transition-all duration-300 outline-none p-1 placeholder-primary placeholder-opacity-75 focus:placeholder-opacity-50"
         placeholder="Search"
         type="text"
         onChange={handleTyping}
         onFocus={() => setVisible(true)}
-        onBlur={waitToHide}
+        onBlur={handleBlur}
       />
       { searchTerm && visible && (
-        <SuggestionsList
-          suggestions={movies || []}
-          handleSelectSuggestion={handleSelectSuggestion}
-        />
+        <div className="relative w-full">
+          <SuggestionsList
+            suggestions={movies || []}
+            handleSelectSuggestion={handleSelectSuggestion}
+          />
+        </div>
       )}
     </div>
   );

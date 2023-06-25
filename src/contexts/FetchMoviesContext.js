@@ -2,6 +2,7 @@ import { createContext, useContext } from "react";
 import { useQuery } from "react-query";
 
 const MOVIES_ENDPOINT = "https://api.themoviedb.org/3/search/movie?api_key=a0471c3efcac73e624b948daeda6085f"
+const MAX_AMOUNT = 6
 
 const FetchMoviesContext = createContext()
 
@@ -18,7 +19,7 @@ async function fetchMovies(txt) {
   }
   const data = await response.json()
   const { results } = data
-  return results
+  return results.slice(0, MAX_AMOUNT)
 }
 
 export function FetchMoviesProvider({ children }) {
