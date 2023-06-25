@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SuggestionsList from "./SuggestionsList";
 import { debounce } from "../utils/debounce";
 
@@ -23,13 +23,15 @@ async function fetchMovies(txt) {
 }
 
 export default function TypeaheadInput() {
-  const [term, setTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState("")
   const [movies, setMovies] = useState([])
   const [visible, setVisible] = useState(false)
 
+  const searchInputRef = useRef(null)
+
   const debouncedUpdateMovies = debounce(async () => {
     try {
-      const results = await fetchMovies(term)
+      const results = await fetchMovies(searchTerm)
       results.length > 0 && setMovies([...results])
     } catch (error) {
       console.error('Failed to fetch movies:', error);
@@ -38,15 +40,22 @@ export default function TypeaheadInput() {
 
   useEffect(() => {
     debouncedUpdateMovies()
-  }, [term, debouncedUpdateMovies])
+  }, [searchTerm, debouncedUpdateMovies])
 
   const handleTyping = e => {
-    setTerm(e.target.value)
+    setSearchTerm(e.target.value)
+  }
+
+  const handleSelectSuggestion = movieName => {
+    searchInputRef.current.value = movieName
+    setSearchTerm(movieName)
+    setVisible(false)
   }
 
   return (
     <div className="flex flex-col justify-center items-center">
       <input
+        ref={searchInputRef}
         className="text-lg text-primary border-primary border rounded-md w-48 focus:w-96 transition-all focus:outline-none p-1 mb-2"
         placeholder="Search"
         type="text"
@@ -54,7 +63,7 @@ export default function TypeaheadInput() {
         onFocus={() => setVisible(true)}
         onBlur={() => setVisible(false)}
       />
-      { term && visible && <SuggestionsList suggestions={ movies } />}
+      { searchTerm && visible && <SuggestionsList suggestions={movies} handleSelectSuggestion={handleSelectSuggestion} />}
     </div>
   );
 }
