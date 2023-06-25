@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import SuggestionsList from "./SuggestionsList";
 import { debounce } from "../utils/debounce";
 import { useFetchMovies } from "../contexts/FetchMoviesContext";
@@ -6,33 +6,26 @@ import { useFetchMovies } from "../contexts/FetchMoviesContext";
 const DELAY = 250
 
 export function TypeaheadInput() {
-  const { fetchMovies } = useFetchMovies();
 
   const [searchTerm, setSearchTerm] = useState("")
-  const [movies, setMovies] = useState([])
   const [visible, setVisible] = useState(false)
 
+  const { useFetchAndCacheMovies } = useFetchMovies()
+  const { data: movies } = useFetchAndCacheMovies(searchTerm)
+
   const searchInputRef = useRef(null)
-
-  const debouncedUpdateMovies = debounce(async () => {
-    try {
-      const results = await fetchMovies(searchTerm)
-      results.length > 0 && setMovies([...results])
-    } catch (error) {
-      console.error('Failed to fetch movies:', error);
-    }
-  }, DELAY);
-
-  useEffect(() => {
-    debouncedUpdateMovies()
-  }, [searchTerm, debouncedUpdateMovies])
 
   const waitToHide = () => {
     setTimeout(() => setVisible(false), DELAY)
   }
 
-  const handleTyping = e => {
-    setSearchTerm(e.target.value)
+  const debouncedHandleTyping = debounce(event => {
+    setSearchTerm(event.target.value);
+  }, DELAY);
+
+  const handleTyping = event => {
+    event.persist();
+    debouncedHandleTyping(event);
   }
 
   const handleSelectSuggestion = movieName => {
@@ -52,7 +45,12 @@ export function TypeaheadInput() {
         onFocus={() => setVisible(true)}
         onBlur={waitToHide}
       />
-      { searchTerm && visible && <SuggestionsList suggestions={movies} handleSelectSuggestion={handleSelectSuggestion} />}
+      { searchTerm && visible && (
+        <SuggestionsList
+          suggestions={movies || []}
+          handleSelectSuggestion={handleSelectSuggestion}
+        />
+      )}
     </div>
   );
 }
