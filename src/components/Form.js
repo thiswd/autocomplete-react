@@ -1,5 +1,5 @@
-import { FetchMoviesProvider } from "../contexts/useFetchMovies";
-import TypeaheadInput from "./TypeaheadInput";
+import { FetchMoviesProvider } from "../contexts/FetchMoviesContext";
+import { TypeaheadInput } from "./TypeaheadInput";
 
 export default function Form() {
   return (

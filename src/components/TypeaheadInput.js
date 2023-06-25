@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import SuggestionsList from "./SuggestionsList";
 import { debounce } from "../utils/debounce";
-import { useFetchMovies } from "../contexts/useFetchMovies";
+import { useFetchMovies } from "../contexts/FetchMoviesContext";
 
 const DELAY = 250
 
-export default function TypeaheadInput() {
+export function TypeaheadInput() {
   const { fetchMovies } = useFetchMovies();
 
   const [searchTerm, setSearchTerm] = useState("")
