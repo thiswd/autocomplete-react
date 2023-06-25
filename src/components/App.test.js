@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "./App";
 
@@ -8,7 +8,7 @@ test("renders Able Typeahead", () => {
   expect(linkElement).toBeInTheDocument();
 });
 
-test.skip("user can type on search bar", () => {
+test("user can type on search bar", async () => {
   render(<App />);
   const textInput = screen.getByPlaceholderText(/Search/i);
   expect(textInput).toBeInTheDocument();
@@ -18,5 +18,7 @@ test.skip("user can type on search bar", () => {
   resultsList = screen.queryByTestId("results-list");
   expect(resultsList).toBeInTheDocument();
   textInput.blur();
-  expect(resultsList).not.toBeInTheDocument();
+  await waitFor(() => {
+    expect(resultsList).not.toBeInTheDocument();
+  }, { timeout: 250 })
 });
