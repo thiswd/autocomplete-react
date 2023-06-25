@@ -1,28 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import SuggestionsList from "./SuggestionsList";
 import { debounce } from "../utils/debounce";
+import { useFetchMovies } from "../contexts/useFetchMovies";
 
-// This endpoint is from TheMovieDB https://developers.themoviedb.org/3/search/search-movies
-// There is a missing query string `query` to make the search
-const MOVIES_ENDPOINT = "https://api.themoviedb.org/3/search/movie?api_key=a0471c3efcac73e624b948daeda6085f"
-
-function buildUrl(txt) {
-  const encodedTerm = encodeURI(txt)
-  return `${MOVIES_ENDPOINT}&query=${encodedTerm}`
-}
-
-async function fetchMovies(txt) {
-  const url = buildUrl(txt)
-  const response = await fetch(url)
-  if (!response.ok) {
-    throw new Error(`Failed to fetch movies. Status: ${response.status}, URL: ${url}`);
-  }
-  const data = await response.json()
-  const { results } = data
-  return results
-}
+const DELAY = 250
 
 export default function TypeaheadInput() {
+  const { fetchMovies } = useFetchMovies();
+
   const [searchTerm, setSearchTerm] = useState("")
   const [movies, setMovies] = useState([])
   const [visible, setVisible] = useState(false)
@@ -36,11 +21,15 @@ export default function TypeaheadInput() {
     } catch (error) {
       console.error('Failed to fetch movies:', error);
     }
-  }, 250);
+  }, DELAY);
 
   useEffect(() => {
     debouncedUpdateMovies()
   }, [searchTerm, debouncedUpdateMovies])
+
+  const waitToHide = () => {
+    setTimeout(() => setVisible(false), DELAY)
+  }
 
   const handleTyping = e => {
     setSearchTerm(e.target.value)
@@ -61,7 +50,7 @@ export default function TypeaheadInput() {
         type="text"
         onChange={handleTyping}
         onFocus={() => setVisible(true)}
-        onBlur={() => setVisible(false)}
+        onBlur={waitToHide}
       />
       { searchTerm && visible && <SuggestionsList suggestions={movies} handleSelectSuggestion={handleSelectSuggestion} />}
     </div>
