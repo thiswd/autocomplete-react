@@ -1,6 +1,6 @@
 # Typeahead Autocomplete
 
-## Project Description
+### Project Description
 
 This project presents a common feature experienced on most websites, the Typeahead or Autocomplete functionality. This is a UI feature that provides real-time suggestions to users as they type into a search input field. A practical example can be seen on Google Search where suggestions populate as you type.
 
@@ -10,7 +10,7 @@ This project also includes a cache layer which stores previously fetched data, r
 
 Finally, the application incorporates a feature that allows users to select movies from the suggestion list and add them to a personalized list of selected movies.
 
-## Technologies and Patterns
+### Technologies and Patterns
 
 The project was built using **React** for the frontend. We used **React Query** for data fetching, caching and updating our state, ensuring our UI stays in sync with the server state.
 
@@ -22,5 +22,6 @@ To ensure the reliability of our application, we used **Jest** and **React Testi
 
 For containerization and ease of deployment, we leveraged **Docker** and **Docker Compose**.
 
-## Conclusion
+### Conclusion
+
 This project provides a practical and interactive demonstration of the Typeahead or Autocomplete functionality using React. The project underscores the importance of creating efficient, user-friendly interfaces while optimizing performance. The implementation of caching techniques and the use of debouncing functions in the project showcase efficient ways to optimize data fetching from APIs. The project further shows how state management can be effectively handled using the Context API, custom hooks, and React Query. Lastly, the integration of unit and integration testing helps to ensure the reliability and maintainability of the application. The project offers a comprehensive example for developers looking to understand how to implement and optimize a typeahead feature in a React application.
