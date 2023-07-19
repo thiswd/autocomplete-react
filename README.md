@@ -1,48 +1,26 @@
-# Typeahead
+# Typeahead Autocomplete
 
-## Description
+## Project Description
 
-Typeahead or autocomplete is a common feature that people come across on websites. For example, when you are searching on Google, you will notice a word populates before you finish typing.
+This project presents a common feature experienced on most websites, the Typeahead or Autocomplete functionality. This is a UI feature that provides real-time suggestions to users as they type into a search input field. A practical example can be seen on Google Search where suggestions populate as you type.
 
-## Requirements
+Our Typeahead feature demonstrates a reactive, user-friendly experience by dynamically fetching and displaying a list of movie suggestions based on user input. As the user types into the search field, requests are sent to the movie database API, and a list of corresponding movie titles are fetched and displayed. To ensure the UI is unobtrusive, the list of suggestions disappears when the input field loses focus.
 
-- Whenever the user focuses the text field and the value changes, it should show the list of suggestions.
+This project also includes a cache layer which stores previously fetched data, reducing the number of requests to the API and improving the application's performance.
 
-- Whenever the text input looses focus (either because of clicking away or becasue of pressing Tab for example) the suggestions should disappear, so they don't keep covering the rest of the app.
+Finally, the application incorporates a feature that allows users to select movies from the suggestion list and add them to a personalized list of selected movies.
 
-- When the user writes something in the text field, it should continuously fetch and show suggestions for anything written, updating it live, without the need to click a button or press the ENTER key or anything else
+## Technologies and Patterns
 
-- We don't want to blow up our API by sending so many unnecessary requests, so whenever the text field is changed, instead of immediately sending a request, it should wait for 250 ms of no new changes before actually sending a request to the API.
+The project was built using **React** for the frontend. We used **React Query** for data fetching, caching and updating our state, ensuring our UI stays in sync with the server state.
 
-- Once the suggestions appear, hovering the mouse pointer on any specific suggestion should highlight it.
+A **debouncing** function is implemented to optimize the search input field. This function delays processing the input until there has been a sufficient pause in typing, reducing the number of API calls.
 
-**Nice to have**
+We also adopted the **Context API** and **custom hooks** to manage global state and logic respectively, keeping our components lean and enhancing reusability of code.
 
-- Add a cache layer for the data
+To ensure the reliability of our application, we used **Jest** and **React Testing Library** for unit and integration testing.
 
-- Have another list which will have selected movies from your search list.
+For containerization and ease of deployment, we leveraged **Docker** and **Docker Compose**.
 
-## Notes
-
-Remember to remove `.skip` from the tests found on `/frontend-typeahead/src/components/App.test.js`
-
-<hr />
-
-## **Docker Setup**
-This guide will help you to run the components of the exercise as Docker containers using Docker Compose on your local environment.
-
-**Prerequisites**
-  * Docker: [Linux](https://docs.docker.com/engine/install/ubuntu/), [MacOS](https://docs.docker.com/docker-for-mac/install/), [Windows](https://docs.docker.com/docker-for-windows/install/)
-  * [Docker Compose](https://docs.docker.com/compose/install/) (Only for Linux)
-**Run your environment**
-
-### **Typeahead**
-The following command will run the application:
-```
-docker-compose up -d
-```
-You can check the status of the Docker containers by running:
-```
-docker ps
-```
-By default, the application will run on port 3000 ( https://localhost:3000)
+## Conclusion
+This project provides a practical and interactive demonstration of the Typeahead or Autocomplete functionality using React. The project underscores the importance of creating efficient, user-friendly interfaces while optimizing performance. The implementation of caching techniques and the use of debouncing functions in the project showcase efficient ways to optimize data fetching from APIs. The project further shows how state management can be effectively handled using the Context API, custom hooks, and React Query. Lastly, the integration of unit and integration testing helps to ensure the reliability and maintainability of the application. The project offers a comprehensive example for developers looking to understand how to implement and optimize a typeahead feature in a React application.
